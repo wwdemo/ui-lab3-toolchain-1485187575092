@@ -15,8 +15,7 @@
 FROM php
 MAINTAINER Cato Johannessen "cjohannessen@us.ibm.com"
 ## Install the sidecar
-RUN curl -sSL https://github.com/amalgam8/amalgam8/releases/download/v0.4.2/a8sidecar.sh | sh;\
-    yum -y install nginx
+RUN curl -sSL https://github.com/amalgam8/amalgam8/releases/download/v0.4.2/a8sidecar.sh | sh
 
 # Install the application
 COPY ./ /var/www/html/
