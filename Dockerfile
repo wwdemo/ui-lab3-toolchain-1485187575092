@@ -12,20 +12,41 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-FROM php
+FROM centos
 MAINTAINER Cato Johannessen "cjohannessen@us.ibm.com"
-## Install the sidecar
+
 RUN curl -sSL https://github.com/amalgam8/amalgam8/releases/download/v0.4.2/a8sidecar.sh | sh
 
-# Install the application
-COPY ./ /var/www/html/
+RUN yum -y install epel-release;\
+	yum -y install nginx;\
+	yum clean all
+
 WORKDIR /var/www/html/
+COPY ./ /var/www/html/
+
+
+# Export port 80
+EXPOSE 80
+
+# This container is a web server serving PHP apps, so a plain Apache is our entry point
+#ENTRYPOINT [ "/usr/sbin/nginx" ]
+ENTRYPOINT ["a8sidecar", "--register", "--proxy", "/usr/sbin/nginx"]
+
+
+#FROM php
+#MAINTAINER Cato Johannessen "cjohannessen@us.ibm.com"
+## Install the sidecar
+#RUN curl -sSL https://github.com/amalgam8/amalgam8/releases/download/v0.4.2/a8sidecar.sh | sh
+
+# Install the application
+#COPY ./ /var/www/html/
+#WORKDIR /var/www/html/
 
 # ENV WEB_PORT 80
-EXPOSE  80
+#EXPOSE  80
 
 ## script_to_launch_sidecar_and_app
-ENTRYPOINT ["a8sidecar", "--register", "--proxy", "/usr/sbin/nginx", ""]
+#ENTRYPOINT ["a8sidecar", "--register", "--proxy", "/usr/sbin/nginx", ""]
 
 ## Inject environment variables into the microservices container
 ENV A8_SERVICE=UI:v1.0
