@@ -19,7 +19,9 @@ RUN curl -sSL https://github.com/amalgam8/amalgam8/releases/download/v0.4.2/a8si
     yum -y install nginx
 
 # Install the application
-COPY index.php /var/www/html/
+COPY ./ /var/www/html/
+WORKDIR /var/www/html/
+
 # ENV WEB_PORT 80
 EXPOSE  80
 
